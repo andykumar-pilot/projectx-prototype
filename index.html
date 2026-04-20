@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Experience Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--bg:#FAFCFB;--card:#FFFFFF;--card2:#F4F7F5;
+--green:#1B7A5A;--greenL:#2BB88A;--greenP:#E6F5EE;
+--warm:#D4873E;--warmP:#FDF3E8;
+--coral:#C9544A;--coralP:#FCEAE8;
+--blue:#3A7DD4;--blueP:#E8F0FB;
+--lav:#7C5FC5;--lavP:#F0EBF9;
+--pink:#B85088;--pinkP:#FBEAF5;
+--dark:#1A1F1D;--mid:#5A6B63;--muted:#8A9B94;--border:#E2E8E4;
+--serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+--px:1rem;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--dark);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.screen{display:none;min-height:100vh;animation:fadeIn .35s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── NAV ── */
+nav{padding:.75rem var(--px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:100}
+.logo{font-family:var(--serif);font-size:1.3rem;color:var(--green);font-weight:400}
+.nav-links{display:none}
+.nav-cta{background:var(--green);color:#fff;border:none;padding:.45rem 1rem;border-radius:50px;font-size:.82rem;cursor:pointer;font-family:var(--sans);font-weight:500;white-space:nowrap}
+
+/* ── HERO ── */
+.hero-section{max-width:720px;margin:0 auto;padding:2.5rem var(--px) 2rem;text-align:center}
+.hero-section .eyebrow{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--greenL);font-weight:500;margin-bottom:.75rem}
+.hero-section h1{font-family:var(--serif);font-size:2rem;line-height:1.1;color:var(--dark);margin-bottom:.85rem}
+.hero-section h1 em{font-style:italic;color:var(--green)}
+.hero-section p{font-size:.95rem;color:var(--muted);line-height:1.6;margin:0 auto 1.75rem}
+
+/* ── GOAL CARDS ── */
+.goals{max-width:800px;margin:0 auto;padding:0 var(--px) 5rem;display:grid;grid-template-columns:1fr;gap:.85rem}
+.goal-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:1.25rem;cursor:pointer;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden;-webkit-user-select:none;user-select:none}
+.goal-card:active{border-color:var(--green);box-shadow:0 4px 16px rgba(27,122,90,.1)}
+.goal-card .g-tag{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:.45rem;display:inline-block;padding:2px 8px;border-radius:4px}
+.goal-card h3{font-family:var(--serif);font-size:1.15rem;margin-bottom:.35rem}
+.goal-card p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.goal-card .g-includes{margin-top:.65rem;font-size:.72rem;color:var(--mid);line-height:1.6}
+.goal-card .g-price{margin-top:.65rem;font-family:var(--serif);font-size:1.1rem;color:var(--dark)}
+.goal-card .g-price span{font-size:.78rem;color:var(--muted);font-family:var(--sans)}
+.goal-card-custom{flex-direction:column !important;gap:.75rem !important}
+.goal-card-custom .g-custom-body{flex:1}
+.goal-card-custom .g-custom-price{text-align:left}
+
+/* ── SECTION HEADINGS ── */
+.section-wrap{max-width:700px;margin:0 auto;padding:2rem var(--px) 5rem}
+.section-wrap h2{font-family:var(--serif);font-size:1.6rem;margin-bottom:.3rem}
+.section-wrap .sub{color:var(--muted);font-size:.88rem;margin-bottom:1.75rem;line-height:1.5}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{display:flex;gap:.3rem;margin-bottom:1.75rem}
+.progress-bar .dot{height:4px;flex:1;border-radius:2px;background:var(--border)}
+.progress-bar .dot.active{background:var(--green)}
+
+/* ── FORM ── */
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;font-size:.75rem;font-weight:500;color:var(--mid);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-size:1rem;font-family:var(--sans);background:var(--card);color:var(--dark);outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green)}
+.form-group textarea{min-height:80px;resize:vertical}
+.upload-area{border:2px dashed var(--border);border-radius:12px;padding:1.5rem 1rem;text-align:center;cursor:pointer;background:var(--card2)}
+.upload-area p{font-size:.82rem;color:var(--muted)}
+.upload-area .up-icon{font-size:1.4rem;margin-bottom:.4rem;display:block;color:var(--greenL)}
+
+/* ── BIOMARKER GRID ── */
+.marker-grid{display:grid;grid-template-columns:1fr;gap:.65rem;margin-bottom:1.75rem}
+.marker{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;position:relative}
+.marker .m-name{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.marker .m-value{font-family:var(--serif);font-size:1.35rem;margin-bottom:.2rem}
+.marker .m-range{font-size:.68rem;color:var(--muted)}
+.marker .m-status{position:absolute;top:1rem;right:1rem;width:8px;height:8px;border-radius:50%}
+.marker .m-insight{font-size:.74rem;color:var(--mid);margin-top:.35rem;line-height:1.45;font-style:italic}
+.status-good{background:#2BB88A}
+.status-watch{background:#D4873E}
+.status-low{background:#C9544A}
+
+/* ── PROTOCOL CARDS ── */
+.protocol-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:.65rem;display:flex;gap:.85rem;align-items:flex-start}
+.p-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:500;color:#fff;flex-shrink:0;margin-top:1px}
+.p-content{flex:1;min-width:0}
+.p-content h4{font-size:.92rem;font-weight:500;margin-bottom:.18rem}
+.p-content .p-why{font-size:.76rem;color:var(--mid);line-height:1.5;margin-bottom:.25rem}
+.p-content .p-dose{font-size:.73rem;color:var(--green);font-weight:500}
+.protocol-note{background:var(--greenP);border-radius:12px;padding:1.1rem;margin:1.25rem 0;font-size:.8rem;color:var(--green);line-height:1.55}
+
+/* ── CHECKOUT ── */
+.box-preview{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1.25rem}
+.box-preview h3{font-family:var(--serif);font-size:1rem;margin-bottom:.85rem;color:var(--dark)}
+.box-item{display:flex;justify-content:space-between;align-items:flex-start;padding:.55rem 0;border-bottom:1px solid var(--card2);font-size:.83rem;gap:.5rem}
+.box-item:last-child{border:none}
+.box-item .bi-name{color:var(--dark);font-weight:500;flex:1}
+.box-item .bi-detail{color:var(--muted);font-size:.72rem;text-align:right;flex-shrink:0;max-width:45%}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;padding:.85rem 0;margin-top:.4rem;border-top:2px solid var(--dark)}
+.total-row .t-label{font-size:.88rem;font-weight:500}
+.total-row .t-price{font-family:var(--serif);font-size:1.5rem;color:var(--green)}
+.total-row .t-price span{font-size:.82rem;color:var(--muted);font-family:var(--sans)}
+.subscribe-btn{width:100%;background:var(--green);color:#fff;border:none;padding:1rem;border-radius:12px;font-size:1rem;font-weight:500;cursor:pointer;font-family:var(--sans);transition:background .2s;margin-top:.4rem}
+.subscribe-btn:active{background:var(--dark)}
+.trust-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:1.25rem;font-size:.7rem;color:var(--muted);text-align:center}
+.trust-item{background:var(--card2);border-radius:8px;padding:.4rem .5rem}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;background:var(--green);color:#fff;border:none;padding:.8rem 1.5rem;border-radius:50px;font-size:.92rem;cursor:pointer;font-family:var(--sans);font-weight:500;transition:background .2s;width:100%}
+.btn:active{background:var(--dark)}
+.btn-outline{background:transparent;color:var(--green);border:1.5px solid var(--green)}
+.btn-outline:active{background:var(--greenP)}
+.btn-row{display:flex;flex-direction:column;gap:.6rem;margin-top:1.25rem}
+
+/* ── CUSTOM BUILDER ── */
+.custom-note{background:var(--blueP);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:.79rem;color:var(--blue);line-height:1.5}
+.category-label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin:1.4rem 0 .5rem;padding-bottom:.35rem;border-bottom:1px solid var(--border)}
+.pep-grid{display:grid;grid-template-columns:1fr;gap:.55rem}
+.pep-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:.9rem;cursor:pointer;transition:border-color .2s;position:relative}
+.pep-card:active{border-color:var(--green)}
+.pep-card.selected{border-color:var(--green);background:var(--greenP)}
+.pep-card.selected::after{content:'';position:absolute;top:.75rem;right:.75rem;width:20px;height:20px;border-radius:50%;background:var(--green);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 5L6.5 11L4 8.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-size:14px;background-position:center;background-repeat:no-repeat}
+.pep-card .pc-name{font-weight:500;font-size:.88rem;margin-bottom:.12rem;padding-right:1.75rem}
+.pep-card .pc-use{font-size:.74rem;color:var(--muted);line-height:1.4;margin-bottom:.35rem}
+.pep-card .pc-meta{display:flex;justify-content:space-between;align-items:center}
+.pep-card .pc-route{font-size:.64rem;color:var(--mid);background:var(--card2);padding:2px 6px;border-radius:4px}
+.pep-card .pc-price{font-size:.83rem;font-weight:500;color:var(--dark)}
+.cart-bar{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:.85rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,.08)}
+.cart-bar .cb-left{flex:1;min-width:0}
+.cart-bar .cb-count{font-size:.82rem;color:var(--mid);white-space:nowrap}
+.cart-bar .cb-count strong{color:var(--dark);font-family:var(--serif);font-size:1rem}
+.cart-bar .cb-note{font-size:.65rem;color:var(--muted);line-height:1.3;margin-top:.1rem}
+.cart-bar .btn{width:auto;padding:.65rem 1.25rem;font-size:.85rem;flex-shrink:0;border-radius:50px}
+.upsell-banner{background:var(--lavP);border-radius:12px;padding:.9rem 1.1rem;margin:1.25rem 0}
+.upsell-banner .ub-text{font-size:.8rem;color:var(--dark);line-height:1.5;margin-bottom:.6rem}
+.upsell-banner .ub-text strong{display:block;margin-bottom:.1rem;font-size:.85rem}
+.upsell-banner .ub-btn{background:var(--lav);color:#fff;border:none;padding:.5rem 1rem;border-radius:50px;font-size:.78rem;cursor:pointer;font-family:var(--sans);display:inline-block}
+
+/* ── CONFIRMATION ── */
+.confirmation-wrap{max-width:460px;margin:0 auto;padding:3rem var(--px) 5rem;text-align:center}
+.confirmation-icon{width:60px;height:60px;border-radius:50%;background:var(--greenP);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
+.confirmation-steps{text-align:left;max-width:380px;margin:1.5rem auto 0}
+.conf-step{display:flex;gap:.85rem;margin-bottom:1.1rem}
+.conf-num{width:30px;height:30px;border-radius:50%;background:var(--greenP);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.78rem;font-weight:500;color:var(--green)}
+.conf-text h4{font-size:.88rem;font-weight:500;margin-bottom:.12rem}
+.conf-text p{font-size:.78rem;color:var(--muted);line-height:1.4}
+
+/* ── DESKTOP ENHANCEMENTS ── */
+@media(min-width:600px){
+  :root{--px:1.5rem}
+  nav{padding:1rem 2rem}
+  .nav-links{display:flex;gap:1.5rem;font-size:.85rem}
+  .nav-links a{color:var(--muted);text-decoration:none}
+  .hero-section{padding:4rem var(--px) 2.5rem}
+  .hero-section h1{font-size:2.5rem}
+  .goals{grid-template-columns:repeat(2,1fr)}
+  .goal-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 8px 24px rgba(27,122,90,.08)}
+  .goal-card-custom{flex-direction:row !important;align-items:center !important;gap:1.5rem !important}
+  .goal-card-custom .g-custom-price{text-align:right}
+  .marker-grid{grid-template-columns:repeat(2,1fr)}
+  .pep-grid{grid-template-columns:repeat(2,1fr)}
+  .btn{width:auto}
+  .btn-row{flex-direction:row}
+  .trust-row{display:flex;gap:1.5rem}
+  .trust-item{background:none;padding:0}
+  .cart-bar{position:sticky;left:auto;right:auto;border-radius:16px 16px 0 0;max-width:720px;margin:0 auto}
+  .upsell-banner{display:flex;align-items:center;gap:1rem}
+  .upsell-banner .ub-text{margin-bottom:0;flex:1}
+  .hero-section h1{font-size:2.8rem}
+}
+@media(min-width:900px){
+  .hero-section{padding:5rem var(--px) 3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Project X</div>
+  <div class="nav-links">
+    <a href="#">How it works</a>
+    <a href="#">Protocols</a>
+    <a href="#">Science</a>
+    <a href="#">Pricing</a>
+  </div>
+  <button class="nav-cta" onclick="showScreen('hero')">Get started</button>
+</nav>
+
+<!-- SCREEN 1: HERO + GOAL SELECTION -->
+<div id="hero" class="screen active">
+  <div class="hero-section">
+    <div class="eyebrow">Personalized peptide therapy</div>
+    <h1>Your blood tells the story.<br><em>We write the protocol.</em></h1>
+    <p>Tell us your goal. We'll test your blood, design your protocol, and ship everything you need in one monthly box.</p>
+  </div>
+
+  <div class="goals">
+    <div class="goal-card" onclick="selectGoal('metabolic')">
+      <div class="g-tag" style="background:var(--greenP);color:var(--green)">Most popular</div>
+      <h3>Metabolic reset</h3>
+      <p>Lose weight with GLP-1 therapy, guided by blood work and a real physician — not just a questionnaire.</p>
+      <div class="g-includes">Includes: GLP-1 medication + sermorelin + supplements + quarterly labs + AI dosing app</div>
+      <div class="g-price">$299 <span>/month — everything included</span></div>
+    </div>
+
+    <div class="goal-card" onclick="selectGoal('offramp')">
+      <div class="g-tag" style="background:var(--lavP);color:var(--lav)">Only platform offering this</div>
+      <h3>GLP-1 off-ramp</h3>
+      <p>Transition off Ozempic/Wegovy without regaining weight or losing muscle. A systematic taper protocol.</p>
+      <div class="g-includes">Includes: Ipamorelin + CJC-1295 + BPC-157 + taper plan + monthly labs + coaching</div>
+      <div class="g-price">$499 <span>/month — everything included</span></div>
+    </div>
+
+    <div class="goal-card" onclick="selectGoal('longevity')">
+      <div class="g-tag" style="background:var(--warmP);color:var(--warm)">Advanced protocols</div>
+      <h3>Longevity optimization</h3>
+      <p>Optimize energy, recovery, and cellular health with physician-supervised peptide stacks and biomarker tracking.</p>
+      <div class="g-includes">Includes: NAD+ + peptide stack + full supplement protocol + monthly labs + dedicated clinician</div>
+      <div class="g-price">$499 <span>/month — everything included</span></div>
+    </div>
+
+    <div class="goal-card" onclick="selectGoal('sexual')">
+      <div class="g-tag" style="background:var(--pinkP);color:var(--pink)">Men & women</div>
+      <h3>Sexual health</h3>
+      <p>Restore desire and performance with PT-141 — the only FDA-approved peptide for sexual dysfunction.</p>
+      <div class="g-includes">Includes: PT-141 + oxytocin + hormone panel + clinician consult + on-demand dosing</div>
+      <div class="g-price">$199 <span>/month — everything included</span></div>
+    </div>
+
+    <div class="goal-card goal-card-custom" onclick="showScreen('custom')" style="grid-column:1/-1;display:flex;gap:1.5rem;align-items:center;background:var(--card2);border-style:dashed">
+      <div class="g-custom-body">
+        <div class="g-tag" style="background:var(--blueP);color:var(--blue)">Already know what you want?</div>
+        <h3>Build your own protocol</h3>
+        <p>Choose individual peptides from our full formulary. Your physician still reviews your blood work and approves your selections — we don't ship without clinical clearance.</p>
+      </div>
+      <div class="g-custom-price" style="flex-shrink:0">
+        <div class="g-price">From $149 <span>/month per peptide</span></div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:.25rem">Blood work required · Physician approved</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:0 var(--px) 3rem;max-width:600px;margin:0 auto">
+    <p style="font-size:.85rem;color:var(--muted);line-height:1.6">Not sure which is right? Take our 2-minute assessment and we'll recommend a starting point based on your goals.</p>
+    <div class="btn-row" style="justify-content:center;margin-top:1rem">
+      <button class="btn btn-outline" onclick="showScreen('intake')">Take the assessment</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: INTAKE -->
+<div id="intake" class="screen">
+  <div class="section-wrap">
+    <div class="progress-bar"><div class="dot active"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <h2>Tell us about you</h2>
+    <p class="sub">This takes about 8 minutes. Your answers help your physician design a protocol specific to your body.</p>
+
+    <div class="form-group">
+      <label>What's your primary health goal?</label>
+      <select>
+        <option>I want to lose weight with medical support</option>
+        <option>I'm on GLP-1 and want to transition off safely</option>
+        <option>I want to optimize energy, recovery, and longevity</option>
+        <option>I want to improve sexual health and desire</option>
+        <option>I'm not sure — help me figure it out</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Are you currently taking any medications?</label>
+      <textarea placeholder="List current medications, doses, and how long you've been taking them. Include GLP-1s (Ozempic, Wegovy, Mounjaro) if applicable."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Age</label>
+      <input type="number" placeholder="38" value="42">
+    </div>
+
+    <div class="form-group">
+      <label>Biological sex</label>
+      <select><option>Female</option><option>Male</option></select>
+    </div>
+
+    <div class="form-group">
+      <label>Have you used GLP-1 medications? If so, which one and for how long?</label>
+      <input type="text" placeholder="e.g., Ozempic 1mg for 8 months" value="Wegovy 2.4mg for 10 months">
+    </div>
+
+    <div class="form-group">
+      <label>Upload your most recent medical records or blood work (optional)</label>
+      <div class="upload-area">
+        <span class="up-icon">+</span>
+        <p>Drop a PDF or photo of your PCP records, prior blood work, or medication list</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Any known allergies or conditions we should know about?</label>
+      <textarea placeholder="e.g., Allergy to sulfa drugs, history of gallbladder issues, thyroid condition"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="showScreen('bloodwork')">Continue to blood work</button>
+      <button class="btn btn-outline" onclick="showScreen('hero')">Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: BLOOD WORK RESULTS -->
+<div id="bloodwork" class="screen">
+  <div class="section-wrap">
+    <h2>Your blood work results</h2>
+    <p class="sub">Your at-home blood draw results are in. Here's what your body is telling us — and what it means for your protocol.</p>
+
+    <div class="marker-grid">
+      <div class="marker">
+        <div class="m-status status-watch"></div>
+        <div class="m-name">HbA1c</div>
+        <div class="m-value">5.7%</div>
+        <div class="m-range">Optimal: &lt;5.4% &middot; Pre-diabetic: 5.7-6.4%</div>
+        <div class="m-insight">Slightly elevated. Your protocol includes metabolic support to bring this down.</div>
+      </div>
+      <div class="marker">
+        <div class="m-status status-low"></div>
+        <div class="m-name">IGF-1</div>
+        <div class="m-value">118 ng/mL</div>
+        <div class="m-range">Optimal for age: 140-200 ng/mL</div>
+        <div class="m-insight">Below optimal. This is why we're recommending Ipamorelin — to support natural GH production.</div>
+      </div>
+      <div class="marker">
+        <div class="m-status status-good"></div>
+        <div class="m-name">Free testosterone</div>
+        <div class="m-value">8.2 pg/mL</div>
+        <div class="m-range">Optimal: 5-20 pg/mL</div>
+        <div class="m-insight">Within range. No testosterone intervention needed at this time.</div>
+      </div>
+      <div class="marker">
+        <div class="m-status status-watch"></div>
+        <div class="m-name">hsCRP</div>
+        <div class="m-value">2.8 mg/L</div>
+        <div class="m-range">Low risk: &lt;1.0 &middot; Moderate: 1.0-3.0</div>
+        <div class="m-insight">Moderate inflammation. BPC-157 and your supplement protocol will target this.</div>
+      </div>
+      <div class="marker">
+        <div class="m-status status-good"></div>
+        <div class="m-name">TSH</div>
+        <div class="m-value">2.1 mIU/L</div>
+        <div class="m-range">Optimal: 0.5-4.0 mIU/L</div>
+        <div class="m-insight">Thyroid function is normal. No intervention needed.</div>
+      </div>
+      <div class="marker">
+        <div class="m-status status-watch"></div>
+        <div class="m-name">Estradiol</div>
+        <div class="m-value">38 pg/mL</div>
+        <div class="m-range">Pre-menopause: 30-400 &middot; Perimenopause: varies</div>
+        <div class="m-insight">On the lower end for your age. Consistent with early perimenopause. We'll monitor.</div>
+      </div>
+    </div>
+
+    <div class="protocol-note">
+      <strong>What your blood work tells us:</strong> Your profile shows early metabolic stress (HbA1c 5.7%), low growth hormone signaling (IGF-1 118), and moderate inflammation (hsCRP 2.8) — all common after 10 months on GLP-1 therapy. Your protocol is designed to address these markers while preserving the weight loss you've achieved.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="showScreen('protocol')">See your personalized protocol</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 4: YOUR PERSONALIZED PROTOCOL -->
+<div id="protocol" class="screen">
+  <div class="section-wrap">
+    <h2>Your personalized protocol</h2>
+    <p class="sub">Designed by your clinician based on your blood work, health history, and goals. Every item is here for a reason — tap any to learn more.</p>
+
+    <div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lav);font-weight:500;margin-bottom:.75rem">Off-ramp protocol &middot; Female &middot; Age 42</div>
+
+    <div class="protocol-card">
+      <div class="p-dot" style="background:var(--lav)">Rx</div>
+      <div class="p-content">
+        <h4>Ipamorelin</h4>
+        <div class="p-why">Your IGF-1 is 118 — below the 140-200 optimal range. Ipamorelin stimulates natural growth hormone release to support muscle preservation during your GLP-1 taper, without raising cortisol.</div>
+        <div class="p-dose">150 mcg SC twice daily (AM + bedtime) &middot; 5 days on / 2 off</div>
+      </div>
+    </div>
+
+    <div class="protocol-card">
+      <div class="p-dot" style="background:var(--lav)">Rx</div>
+      <div class="p-content">
+        <h4>CJC-1295 (no DAC)</h4>
+        <div class="p-why">Synergistic with Ipamorelin — together they produce sustained, pulsatile GH release that mimics your body's natural rhythm. Supports sleep quality, body composition, and recovery.</div>
+        <div class="p-dose">75 mcg SC twice daily (stacked with Ipamorelin)</div>
+      </div>
+    </div>
+
+    <div class="protocol-card">
+      <div class="p-dot" style="background:var(--coral)">Rx</div>
+      <div class="p-content">
+        <h4>BPC-157</h4>
+        <div class="p-why">Your hsCRP is 2.8 — moderate inflammation. Plus, 10 months on GLP-1 likely caused GI stress. BPC-157 supports gut healing and reduces systemic inflammation during your transition.</div>
+        <div class="p-dose">250 mcg SC daily &middot; 8 weeks on / 4 weeks off</div>
+      </div>
+    </div>
+
+    <div class="protocol-card">
+      <div class="p-dot" style="background:var(--green)">Rx</div>
+      <div class="p-content">
+        <h4>Wegovy taper (your current GLP-1)</h4>
+        <div class="p-why">You'll gradually reduce from 2.4mg over 16 weeks (extended taper for women to minimize weight cycling). We monitor weight, hunger, and biomarkers at every step.</div>
+        <div class="p-dose">Weeks 1-4: 1.7mg &rarr; Weeks 5-8: 1.0mg &rarr; Weeks 9-12: 0.5mg &rarr; Weeks 13-16: 0.25mg &rarr; Stop</div>
+      </div>
+    </div>
+
+    <div class="protocol-card">
+      <div class="p-dot" style="background:var(--warm)">Rx</div>
+      <div class="p-content">
+        <h4>GHK-Cu</h4>
+        <div class="p-why">Collagen production drops 30% in the first 5 years post-menopause. At 42 with early perimenopause markers, GHK-Cu supports skin elasticity — especially important during weight loss.</div>
+        <div class="p-dose">200 mcg SC daily + topical application &middot; Continuous</div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin:1.5rem 0"></div>
+
+    <div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:.75rem">Personalized supplements</div>
+
+    <div class="protocol-card">
+      <div class="p-dot" style="background:var(--greenL)">S</div>
+      <div class="p-content">
+        <h4>Daily supplement packets (AM + PM)</h4>
+        <div class="p-why">Customized to your blood work: D3 (you're at 28 ng/mL, optimal is 40-60), omega-3, magnesium glycinate, collagen peptides 15g, biotin, and electrolyte complex.</div>
+        <div class="p-dose">30 daily packets labeled by day &middot; Take AM packet with breakfast, PM packet with dinner</div>
+      </div>
+    </div>
+
+    <div class="protocol-note">
+      <strong>Why this combination?</strong> Women transitioning off GLP-1 after 10+ months face three concurrent challenges: weight rebound (addressed by Ipamorelin/CJC-1295 for muscle preservation), GI recovery (BPC-157), and accelerated skin/collagen loss (GHK-Cu). This protocol addresses all three while systematically tapering your medication over 16 weeks — longer than the standard 12-week male taper because women's metabolic response to GLP-1 withdrawal differs.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="showScreen('checkout')">Subscribe &amp; start your protocol</button>
+      <button class="btn btn-outline" onclick="showScreen('bloodwork')">Back to blood work</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 5: CHECKOUT -->
+<div id="checkout" class="screen">
+  <div class="section-wrap">
+    <h2>Your monthly box</h2>
+    <p class="sub">Everything ships together, every month. No pharmacy runs, no separate orders. Cancel anytime.</p>
+
+    <div class="box-preview">
+      <h3>What arrives at your door each month</h3>
+      <div class="box-item">
+        <div><div class="bi-name">Ipamorelin + CJC-1295 vial</div><div class="bi-detail">Multi-dose vial, 30-day supply, QR-verified COA</div></div>
+      </div>
+      <div class="box-item">
+        <div><div class="bi-name">BPC-157 vial</div><div class="bi-detail">30-day supply, QR-verified COA</div></div>
+      </div>
+      <div class="box-item">
+        <div><div class="bi-name">GHK-Cu vial + topical</div><div class="bi-detail">Injectable + topical cream, 30-day supply</div></div>
+      </div>
+      <div class="box-item">
+        <div><div class="bi-name">Daily supplement packets (30)</div><div class="bi-detail">AM + PM packets, personalized to your labs</div></div>
+      </div>
+      <div class="box-item">
+        <div><div class="bi-name">Injection supplies</div><div class="bi-detail">Pre-measured syringes, alcohol swabs, sharps container</div></div>
+      </div>
+      <div class="box-item">
+        <div><div class="bi-name">Protocol card</div><div class="bi-detail">Your dosing schedule, injection guide, QR codes</div></div>
+      </div>
+
+      <div class="total-row">
+        <div class="t-label">Monthly subscription</div>
+        <div class="t-price">$499 <span>/month</span></div>
+      </div>
+    </div>
+
+    <div style="background:var(--card2);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.82rem;color:var(--mid);line-height:1.6">
+      <strong style="color:var(--dark)">What's included at no extra cost:</strong> Monthly video consult with your clinician, AI health assistant (24/7), dosing reminders, quarterly blood work retest, protocol adjustments, supply chain verification, cold-chain shipping.
+    </div>
+
+    <button class="subscribe-btn" onclick="showScreen('confirmation')">Start my protocol &rarr;</button>
+
+    <div class="trust-row">
+      <span class="trust-item">30-day clinical guarantee</span>
+      <span class="trust-item">Cancel anytime</span>
+      <span class="trust-item">HIPAA compliant</span>
+      <span class="trust-item">503A pharmacy</span>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: CUSTOM BUILDER -->
+<div id="custom" class="screen">
+  <div class="section-wrap" style="padding-bottom:7rem">
+    <h2>Build your own protocol</h2>
+    <p class="sub">Select the peptides you want. Your physician reviews your blood work and approves your selections before anything ships.</p>
+
+    <div class="custom-note">
+      <strong>How this works:</strong> Pick your peptides below. You'll still complete an intake and blood work panel. Your clinician may adjust doses, suggest additions, or flag contraindications based on your results. Blood work is required — we don't ship without clinical clearance.
+    </div>
+
+    <div class="upsell-banner">
+      <div class="ub-text">
+        <strong>Not sure what to pick?</strong>
+        Let your blood work decide. Choose a goal-based protocol and your clinician designs the optimal stack for your biomarkers.
+      </div>
+      <button class="ub-btn" onclick="showScreen('hero')">See protocols</button>
+    </div>
+
+    <div class="category-label" style="color:var(--green)">Growth hormone support</div>
+    <div class="pep-grid">
+      <div class="pep-card" onclick="togglePep(this,'sermorelin',149)">
+        <div class="pc-name">Sermorelin</div>
+        <div class="pc-use">Stimulates natural GH production. Supports sleep, body composition, and recovery. FDA-approved for GH deficiency diagnostics.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection</span><span class="pc-price">$149/mo</span></div>
+      </div>
+      <div class="pep-card" onclick="togglePep(this,'ipamorelin',169)">
+        <div class="pc-name">Ipamorelin</div>
+        <div class="pc-use">Selective GH secretagogue. Does not raise cortisol or prolactin. Muscle preservation, fat metabolism, anti-aging.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection</span><span class="pc-price">$169/mo</span></div>
+      </div>
+      <div class="pep-card" onclick="togglePep(this,'cjc1295',169)">
+        <div class="pc-name">CJC-1295 (no DAC)</div>
+        <div class="pc-use">GHRH analog. Synergistic with Ipamorelin for sustained, pulsatile GH release. Sleep quality, body composition.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection</span><span class="pc-price">$169/mo</span></div>
+      </div>
+    </div>
+
+    <div class="category-label" style="color:var(--coral)">Repair & recovery</div>
+    <div class="pep-grid">
+      <div class="pep-card" onclick="togglePep(this,'bpc157',159)">
+        <div class="pc-name">BPC-157</div>
+        <div class="pc-use">Tissue repair, gut healing, anti-inflammation. 544 publications. Supports recovery from injury and GI stress.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection or oral</span><span class="pc-price">$159/mo</span></div>
+      </div>
+      <div class="pep-card" onclick="togglePep(this,'tb500',159)">
+        <div class="pc-name">TB-500</div>
+        <div class="pc-use">Thymosin Beta-4 fragment. Tissue repair, wound healing, flexibility. Often stacked with BPC-157.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection</span><span class="pc-price">$159/mo</span></div>
+      </div>
+    </div>
+
+    <div class="category-label" style="color:var(--warm)">Cellular health & longevity</div>
+    <div class="pep-grid">
+      <div class="pep-card" onclick="togglePep(this,'nad',179)">
+        <div class="pc-name">NAD+</div>
+        <div class="pc-use">Cellular energy, DNA repair, mitochondrial function. Essential coenzyme that declines with age. Supports metabolism and cognition.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection or nasal</span><span class="pc-price">$179/mo</span></div>
+      </div>
+      <div class="pep-card" onclick="togglePep(this,'thymosin',179)">
+        <div class="pc-name">Thymosin Alpha-1</div>
+        <div class="pc-use">Immune modulation. Approved in 30+ countries. Supports immune function, reduces chronic inflammation.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection</span><span class="pc-price">$179/mo</span></div>
+      </div>
+      <div class="pep-card" onclick="togglePep(this,'ghkcu',149)">
+        <div class="pc-name">GHK-Cu</div>
+        <div class="pc-use">Copper peptide. Collagen synthesis, wound healing, skin texture. +1,016% YoY search growth. Injectable + topical.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection + topical</span><span class="pc-price">$149/mo</span></div>
+      </div>
+      <div class="pep-card" onclick="togglePep(this,'motsc',189)">
+        <div class="pc-name">MOTS-c</div>
+        <div class="pc-use">Mitochondrial-derived peptide. Exercise mimetic. Insulin sensitivity, fat metabolism, cellular energy.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection</span><span class="pc-price">$189/mo</span></div>
+      </div>
+    </div>
+
+    <div class="category-label" style="color:var(--pink)">Sexual health</div>
+    <div class="pep-grid">
+      <div class="pep-card" onclick="togglePep(this,'pt141',149)">
+        <div class="pc-name">PT-141 (bremelanotide)</div>
+        <div class="pc-use">FDA-approved for HSDD in women (Vyleesi). CNS mechanism for desire/arousal. Works for PDE5 non-responders in men.</div>
+        <div class="pc-meta"><span class="pc-route">SC injection or troche</span><span class="pc-price">$149/mo</span></div>
+      </div>
+      <div class="pep-card" onclick="togglePep(this,'oxytocin',129)">
+        <div class="pc-name">Oxytocin</div>
+        <div class="pc-use">Bonding, intimacy, arousal complement. Intranasal delivery. Often paired with PT-141 for enhanced response.</div>
+        <div class="pc-meta"><span class="pc-route">Intranasal</span><span class="pc-price">$129/mo</span></div>
+      </div>
+    </div>
+
+    <div style="height:5rem"></div>
+  </div>
+
+  <div class="cart-bar" id="cart-bar" style="display:none">
+    <div class="cb-left">
+      <div class="cb-count"><strong id="cart-total">$0</strong>/mo · <span id="cart-count">0</span> peptides</div>
+      <div class="cb-note">+ blood work · physician review · supplies included</div>
+    </div>
+    <button class="btn" onclick="showScreen('intake')">Continue</button>
+  </div>
+</div>
+
+<!-- SCREEN 6: CONFIRMATION -->
+<div id="confirmation" class="screen">
+  <div class="confirmation-wrap">
+    <div class="confirmation-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1B7A5A" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2 style="font-family:var(--serif);font-size:1.8rem;margin-bottom:.4rem">You're in.</h2>
+    <p style="color:var(--muted);font-size:.92rem;line-height:1.6;margin-bottom:1.5rem">Your protocol is being prepared. Here's what happens next:</p>
+    <div class="confirmation-steps">
+      <div class="conf-step"><div class="conf-num">1</div><div class="conf-text"><h4>Download the app</h4><p>Your dosing schedule, AI assistant, and progress tracking are all in the app.</p></div></div>
+      <div class="conf-step"><div class="conf-num">2</div><div class="conf-text"><h4>Clinician video call (within 5 days)</h4><p>Your physician reviews your blood work and confirms your protocol on a 20-minute video call.</p></div></div>
+      <div class="conf-step"><div class="conf-num">3</div><div class="conf-text"><h4>Your box ships (within 7-10 days)</h4><p>Cold-chain packaged, discreet shipping. Scan the QR code to verify your peptides.</p></div></div>
+      <div class="conf-step"><div class="conf-num">4</div><div class="conf-text"><h4>First notification (Day 1)</h4><p>"Time for your evening Ipamorelin." Your AI health companion guides you from the first dose.</p></div></div>
+    </div>
+    <div class="btn-row" style="margin-top:2rem">
+      <button class="btn" onclick="showScreen('hero')">Back to home</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let cart = {};
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function selectGoal(goal) {
+  showScreen('intake');
+}
+function togglePep(el, name, price) {
+  el.classList.toggle('selected');
+  if (cart[name]) { delete cart[name]; } else { cart[name] = price; }
+  updateCart();
+}
+function updateCart() {
+  const items = Object.keys(cart);
+  const total = Object.values(cart).reduce((a, b) => a + b, 0);
+  const bar = document.getElementById('cart-bar');
+  bar.style.display = items.length > 0 ? 'flex' : 'none';
+  document.getElementById('cart-count').textContent = items.length;
+  document.getElementById('cart-total').textContent = '$' + total;
+}
+</script>
+
+</body>
+</html>
